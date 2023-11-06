@@ -1,0 +1,60 @@
+
+class Conta:
+    def __init__(self, numero):
+        self.__numero = numero
+        self.__titular = input("Qual o nome do titular? ").strip().title()
+        self.__saldo = float(input("Qual seu saldo atual? "))
+        self.__limite = 1000.0
+        if self.__saldo>self.__limite:
+            self.__limitado = False
+        elif self.__saldo == self.__limite:
+            self.__limitado = True
+        while self.__saldo > self.__limite:
+            print("Erro. Saldo acima do limite, coloque outro valor, ou comunique com um bancário aí.")
+            self.__saldo = float(input("Qual seu saldo atual? "))
+        if self.__saldo>0:
+            self.__vermelho = False
+        else:
+            self.__vermelho = True
+
+    def depositar(self, valor):
+        if (self.__saldo + valor) > self.__limite:
+            print("Limite alcançado, valor não depositado")
+        elif (self.__saldo + valor) == self.__limite:
+            self.__saldo += valor
+            self.__limitado = True
+        else:
+            self.__saldo += valor
+        if self.__saldo > (self.__limte * (-1)):
+            self.__vermelho = False
+
+    def saldar(self, valor):
+        if valor <= self.__saldo + self.__limite:
+            self.__saldo -= valor
+            self.__limitado = False
+            if self.__saldo <= (self.__limte * (-1)):
+                print("Saldo no limite, cuidado!")
+                self.__vermelho = True
+        else:
+            print("Impossível de saldar acima do limite")
+
+    def extrato_mostrar(self):
+        print(f"R${self.__saldo} do titular {self.__titular}")
+
+    def transferir(self, destino, valor):
+        if not self.__vermelho and not destino.__limitado:
+            self.saldar(valor)
+            destino.depositar(valor)
+        else:
+            print("Impossível de saldar. Saldo negativo")
+
+    def receber(self, pagante, valor):
+        if not pagante.__vermelho and not self.__limitado:
+            pagante.saldar(valor)
+            self.depositar(valor)
+        else:
+            print("Impossível de saldar. Saldo negativo")
+
+    @property
+    def titular(self):
+        return self.__titular
